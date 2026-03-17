@@ -91,15 +91,19 @@ On Solana, programs are executable logic that govern account state. Token
 accounts are managed by a **Token Program**—the on-chain code that verifies
 transfers and updates balances atomically.
 
-Solana has two token programs:
+Solana has three token programs:
 
 | Program           | Address                                       | Example Tokens that <br/> use this program |
 | ----------------- | --------------------------------------------- | ------------------------------------------ |
 | **Token Program** | `TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA` | USDC, USDT                                 |
 | **Token-2022**    | `TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb` | PYUSD, USDG                                |
+| **Light Token**    | `cTokenmWW8bLPjZEBAUgYy3zKxQZW6VKi7bqNFEVv3m` | USDPT                           |
 
-Token-2022 (also called "Token Extensions") adds features like transfer hooks,
-transfer fees, and confidential transfers. Both programs work similarly for
+Token-2022 (also called "Token Extensions") add features like transfer hooks,
+transfer fees, and confidential transfers. 
+The Light Token Program is built by Light Protocol, an infrastructure protocol on Solana.
+It supports most Token-2022 extensions and optimizes cost for existing or to onboard new users.
+All three programs work similarly for
 basic transfers, but you must use the correct one when deriving ATAs.
 
 ### Why This Matters
@@ -151,6 +155,7 @@ own transfer instruction, and you must invoke the correct one:
 ```typescript
 import { getTransferInstruction } from "@solana-program/token";
 import { getTransferInstruction as getTransferInstruction22 } from "@solana-program/token-2022";
+import { createLightTokenTransferInstruction } from "@lightprotocol/compressed-token";
 
 // For USDC (Token Program)
 const usdcTransferIx = getTransferInstruction({
@@ -168,6 +173,14 @@ const pyusdTransferIx = getTransferInstruction22({
   amount: 1_000_000n // 1 PYUSD (6 decimals)
 });
 
+// For USDPT (Light Token)
+const usdptTransferIx = createLightTokenTransferInstruction(
+  senderUsdptAta,
+  receiverUsdptAta,
+  senderWallet,
+  1_000_000n // 1 USDPT (6 decimals)
+);
+
 // *Note*: Most token program JS Client functions include the ability
 // to specify the token program address. Generally, defining it is a
 // good practice to ensure you are fully aware of the program you are using
@@ -184,7 +197,12 @@ const usdcTransferIx2 = getTransferInstruction(
 
 Sending a transfer instruction to the wrong program will fail. The program
 validates that it owns the token accounts involved—accounts created by Token
-Program cannot be transferred via Token-2022, and vice versa.
+Program cannot be transferred via Token-2022, and vice versa. 
+
+<Info>
+This not the case with Light Token. There, you can convert existing SPL or Token-2022
+tokens to Light Token and then transfer in one transaction.
+</Info>
 
 To verify which program a token or token account uses, fetch the mint or token
 account and check its `owner` field:
@@ -223,10 +241,10 @@ const SUPPORTED_TOKENS = {
 
 The Token Extensions Program (Token 2022) provides more features through extra
 instructions referred to as extensions. Extensions are optional features you can
-add to a token mint or token account.
+add to a token mint or token account. The Light Token program supports most Token-2022 extensions.
 
 For more information on Token Extensions, see the
-[Token Extensions](/docs/tokens/extensions) documentation.
+[Token Extensions](/docs/tokens/extensions) and [Light Token](https://www.zkcompression.com/light-token/payments/overview#token-extensions) documentation.
 
 ## Fees
 
