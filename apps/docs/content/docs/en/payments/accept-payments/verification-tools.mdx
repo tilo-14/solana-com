@@ -15,6 +15,10 @@ incoming payments.
 Check your stablecoin balance using the
 [`getTokenAccountBalance`](/docs/rpc/http/gettokenaccountbalance) RPC method:
 
+<Callout>
+  When using [Light Token](https://www.zkcompression.com/light-token/payments/overview), use `getAtaInterface` instead.
+</Callout>
+
 ```typescript
 import { createSolanaRpc, address, type Address } from "@solana/kit";
 import {
@@ -109,6 +113,10 @@ history, we fetch recent signatures for our token account, then retrieve each
 transaction's pre/post token balances. By comparing our ATA's balance before and
 after each transaction, we can determine the payment amount and direction
 (incoming vs outgoing).
+
+<Callout>
+  When using [Light Token](https://www.zkcompression.com/light-token/payments/overview), use `rpc.getSignaturesForOwnerInterface()` instead.
+</Callout>
 
 ```typescript
 async function getRecentPayments(

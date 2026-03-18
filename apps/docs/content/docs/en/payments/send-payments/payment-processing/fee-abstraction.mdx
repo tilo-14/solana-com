@@ -9,11 +9,12 @@ your payment application expect to transact in stablecoins—not manage a second
 token balance. Fee abstraction removes this friction by having someone else pay
 the fees.
 
-This guide covers two levels:
+This guide covers three levels:
 
-1. **How fee sponsorship works** — the underlying Solana primitive
-2. **Fee abstraction at scale with Kora** — a production-ready fee abstraction
+1. **[How fee sponsorship works](#how-fee-sponsorship-works)** — the underlying Solana primitive
+2. **[Fee abstraction at scale with Kora](#fee-abstraction-at-scale-with-kora)** — a production-ready fee abstraction
    service
+3. **[Sponsored rent-exemption with Light Token](#sponsored-rent-exemption-with-light-token)** — a built in feature of the Light Token program
 
 ## How Fee Sponsorship Works
 
@@ -326,7 +327,9 @@ async function demoSetup(
 <Callout type="caution">
   When you create a token account for an end user, they can close it and reclaim
   the SOL used for rent. Consider charging users for account creation in
-  stablecoins, or factor this cost into your product economics.
+  stablecoins, or factor this cost into your product economics. 
+  Alternatively, you can use Light Protocol’s token program that sponsors the rent 
+  for you and lets you abstract fees near Solana's transaction cost. Learn more in [Sponsored Rent-Exemption with Light Token](#sponsored-rent-exemption-with-light-token).
 </Callout>
 
 ## Fee Abstraction at Scale with Kora
@@ -388,5 +391,29 @@ const { signature } = await kora.signAndSendTransaction({
     href="https://launch.solana.com/docs/kora/operators"
   >
     Deploy and configure your own Kora instance.
+  </Card>
+</Cards>
+
+## Sponsored Rent Exemption with Light Token
+
+Solana accounts require rent-exemption to be paid upon creation.
+Normally, rent-exemption is paid by the account owner and can be reclaimed when accounts are closed.
+You can consider charging users for account creation in stablecoins, or factor this cost into your product economics.
+
+Alternatively, you can use Light Token with built in rent sponsorship by the token standard.
+This is dealt with under the hood in a way that doesn’t disrupt the UX of what your users are used to with SPL-token.
+
+1. A rent sponsor PDA by Light Protocol pays the rent-exemption cost for the account.
+2. The `feePayer` on the transaction bumps a small virtual rent balance (766 lamports by default) on each write.
+Set your application as the fee payer so users never interact with SOL.
+3. Accounts get auto-compressed (cold balance) when the virtual rent balance goes below a threshold (eg 24h without write bump).
+4. The cold account’s state is cryptographically preserved on the Solana ledger. 
+Users load a cold account into hot state in-flight when using the account again.
+
+<Cards>
+  <Card
+    title="Rent Sponsorship and Payment Flows using Light Token"
+    href="https://www.zkcompression.com/light-token/payments/overview"
+  >
   </Card>
 </Cards>

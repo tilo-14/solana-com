@@ -66,8 +66,8 @@ ATA, the SOL paid for the rent cannot be recovered by the sender.
 ### Token Accounts
 
 [Token accounts](/docs/tokens/basics/create-token-account) are owned by the
-Token Program or Token-2022 Program and hold token balances. If the address you
-receive is owned by a token program, you should verify the account is a token
+Token Program, Token-2022, or Light Token Program and hold token balances. 
+If the address you receive is owned by a token program, you should verify the account is a token
 account (not a mint account) and matches the expected token mint account before
 sending.
 
@@ -83,6 +83,10 @@ sending.
 metadata of a specific token. Mint accounts are also owned by Token Programs but
 are **not** valid recipients for token transfers. Attempting to send tokens to a
 mint address results in a failed transaction, but no funds are lost.
+
+<Callout type="info">
+Light Token accounts can hold balances of SPL, Token 2022, and Light Token mints.
+</Callout>
 
 ### Other Accounts
 
@@ -158,7 +162,7 @@ If an account exists, check which program owns it:
   exists, and send tokens to it. You must make a policy decision whether to fund
   the creation of the ATA if it doesn't exist.
 
-- **Token Program / Token-2022**: Verify the account is a token account (not a
+- **Token Program / Token-2022 / Light Token**: Verify the account is a token account (not a
   mint account) and that it holds the token (mint) you intend to send. If valid,
   send tokens directly to this address. If it's a mint account or a token
   account for a different mint, reject the address.
@@ -181,6 +185,7 @@ code for illustration purposes.
   account](/docs/tokens/basics/create-token-account#how-to-create-an-associated-token-account)
   and [token transfer](/docs/tokens/basics/transfer-tokens) documentation for
   example code.
+  See here, for address validation when using [Light Token](https://www.zkcompression.com/light-token/payments/overview).
 </Callout>
 
 The demo below uses three possible outcomes:

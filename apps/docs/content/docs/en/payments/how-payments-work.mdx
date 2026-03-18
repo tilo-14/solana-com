@@ -199,10 +199,10 @@ Sending a transfer instruction to the wrong program will fail. The program
 validates that it owns the token accounts involved—accounts created by Token
 Program cannot be transferred via Token-2022, and vice versa. 
 
-<Info>
-This not the case with Light Token. There, you can convert existing SPL or Token-2022
+<Callout type="info">
+This is not the case with Light Token. There, you can convert existing SPL or Token-2022
 tokens to Light Token and then transfer in one transaction.
-</Info>
+</Callout>
 
 To verify which program a token or token account uses, fetch the mint or token
 account and check its `owner` field:
@@ -255,9 +255,10 @@ Solana payments involve up to three cost components:
 | **Base transaction fee**    | 5,000 lamports<sup>\*</sup> | ~$0.0007   | Every transaction (bundle multiple payments to amortize) |
 | **Priority fee**            | Variable                    | Variable   | Optional; faster inclusion during congestion             |
 | **Account creation (rent)** | ~0.0029 SOL                 | ~$0.40     | Only when creating a new token account                   |
+| **Account creation (Light Token)** | ~0.00001 SOL                 | ~$0.001     | When using Light Token                   |
 
 **Total cost per payment**: Under $0.001 for most transfers. If creating a new
-token account, expect ~$0.40 total.
+token account, expect ~$0.40 total. With Light Token, the total cost will be around $0.001, regardless of whether a new account is created.
 
 <Callout type="info">
   Solana uses [local fee
@@ -267,6 +268,7 @@ token account, expect ~$0.40 total.
   high network activity elsewhere. Rent costs are also [planned to decrease 50%
   in the near
   future](https://github.com/solana-foundation/solana-improvement-documents/pull/436).
+   On mainnet today, the [Light Token program](https://www.zkcompression.com/light-token/payments/overview) reduces rent cost by 99%.
 </Callout>
 
 <Callout>

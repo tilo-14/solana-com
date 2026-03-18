@@ -2,6 +2,7 @@ import {
   Category,
   DEFI,
   INFRASTRUCTURE,
+  PAYMENTS,
   TOOLING,
   TESTING,
   PROGRAMS,
@@ -162,6 +163,16 @@ export const COMMUNITY_SKILLS: CommunitySkill[] = [
       "AI coding skill for PNP Protocol covering permissionless prediction markets with P2P betting and custom oracles.",
     url: "https://github.com/pnp-protocol/solana-skill",
     category: DEFI,
+  },
+
+  // ── AI Coding Skills – Payments ─────────────────────────────────────
+  {
+    slug: "light-payments-skill",
+    title: "Light Token Payments Skill",
+    description:
+      "Skill for payment flows with sponsored rent-exemption using Light Token APIs.",
+    url: "https://github.com/Lightprotocol/skills/tree/main/skills/payments",
+    category: PAYMENTS,
   },
 
   // ── AI Coding Skills – Infrastructure ───────────────────────────────
