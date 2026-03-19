@@ -131,6 +131,15 @@ export function SolutionsPaymentsToolingPage() {
               url: "https://solana.com/environment",
             },
           },
+          {
+            type: "cta",
+            heading: t("featureCards.builtForScale.heading"),
+            body: t("featureCards.builtForScale.body"),
+            callToAction: {
+              label: t("buttons.learnMore"),
+              url: "https://www.zkcompression.com/light-token/payments/overview",
+            },
+          },
         ]}
       />
 

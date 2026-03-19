@@ -2960,6 +2960,10 @@
         "title": "Wallets",
         "description": "Build your own, add social logins, or use MCP."
       },
+      "6": {
+        "title": "Built for Scale",
+        "description": "Onboard millions of users at low cost."
+      },
       "title": "Payments Toolkit",
       "description": "Solana has dozens of turnkey products for tokenization."
     },
@@ -3996,6 +4000,10 @@
       "sustainable": {
         "heading": "Sustainable",
         "body": "Solana transactions use the same energy as a few Google searches, and the entire network is carbon neutral."
+      },
+      "builtForScale": {
+        "heading": "Built for Scale",
+        "body": "Token API's like Light Token let you onboard millions of users at low cost."
       }
     },
     "switchbacks": {

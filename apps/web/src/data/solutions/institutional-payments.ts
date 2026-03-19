@@ -45,6 +45,10 @@ export const PRODUCTS = [
     key: "5",
     href: "/wallets",
   },
+  {
+    key: "6",
+    href: "https://www.zkcompression.com/light-token/payments/overview",
+  },
 ];
 
 export const USE_CASES = [

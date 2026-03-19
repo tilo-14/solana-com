@@ -102,6 +102,14 @@ Token-2022 (also called "Token Extensions") adds features like transfer hooks,
 transfer fees, and confidential transfers. Both programs work similarly for
 basic transfers, but you must use the correct one when deriving ATAs.
 
+<Callout type="info">
+  [Light Protocol](https://www.zkcompression.com/light-token/payments/overview) 
+  extends Solana's token   programs with APIs that reduce account creation costs.
+  The APIs mirror existing token program interfaces, so the developer 
+  experience stays familiar. See [Fees](#fees) for cost details.
+</Callout>
+
+
 ### Why This Matters
 
 The Token Program used to create a token governs the instructions and account
@@ -184,7 +192,7 @@ const usdcTransferIx2 = getTransferInstruction(
 
 Sending a transfer instruction to the wrong program will fail. The program
 validates that it owns the token accounts involved—accounts created by Token
-Program cannot be transferred via Token-2022, and vice versa.
+Program cannot be transferred via Token-2022, and vice versa. 
 
 To verify which program a token or token account uses, fetch the mint or token
 account and check its `owner` field:
@@ -223,7 +231,8 @@ const SUPPORTED_TOKENS = {
 
 The Token Extensions Program (Token 2022) provides more features through extra
 instructions referred to as extensions. Extensions are optional features you can
-add to a token mint or token account.
+add to a token mint or token account. 
+The Light Token API's support most Token-2022 extensions.
 
 For more information on Token Extensions, see the
 [Token Extensions](/docs/tokens/extensions) documentation.
@@ -239,7 +248,11 @@ Solana payments involve up to three cost components:
 | **Account creation (rent)** | ~0.0029 SOL                 | ~$0.40     | Only when creating a new token account                   |
 
 **Total cost per payment**: Under $0.001 for most transfers. If creating a new
-token account, expect ~$0.40 total.
+token account, expect ~$0.40 total. 
+
+**Reducing rent fees with [Light Token API's](https://www.zkcompression.com/light-token/payments/overview)**: 
+The total cost will be around $0.001, regardless of whether a new account is created.
+The API's can create new or wrap existing token accounts from SPL / Token-2022 mints. 
 
 <Callout type="info">
   Solana uses [local fee
@@ -249,6 +262,7 @@ token account, expect ~$0.40 total.
   high network activity elsewhere. Rent costs are also [planned to decrease 50%
   in the near
   future](https://github.com/solana-foundation/solana-improvement-documents/pull/436).
+   On mainnet today, the [Light Token API's](https://www.zkcompression.com/light-token/payments/overview) reduce rent cost by 99%.
 </Callout>
 
 <Callout>
@@ -292,6 +306,9 @@ A typical payment flow:
   </Card>
   <Card title="Send your first payment" href="/docs/payments/send-payments">
     Build and send a stablecoin transfer.
+  </Card>
+  <Card title="Payment flows with Light Token" href="https://www.zkcompression.com/light-token/payments/overview">
+    Learn how Light Token API's extend Solana's existing payment flows.
   </Card>
 </Cards>
 
