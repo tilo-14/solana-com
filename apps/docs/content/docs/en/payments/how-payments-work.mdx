@@ -91,20 +91,24 @@ On Solana, programs are executable logic that govern account state. Token
 accounts are managed by a **Token Program**—the on-chain code that verifies
 transfers and updates balances atomically.
 
-Solana has three token programs:
+Solana has two token programs:
 
 | Program           | Address                                       | Example Tokens that <br/> use this program |
 | ----------------- | --------------------------------------------- | ------------------------------------------ |
 | **Token Program** | `TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA` | USDC, USDT                                 |
 | **Token-2022**    | `TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb` | PYUSD, USDG                                |
-| **Light Token**    | `cTokenmWW8bLPjZEBAUgYy3zKxQZW6VKi7bqNFEVv3m` | USDPT                           |
 
-Token-2022 (also called "Token Extensions") add features like transfer hooks,
-transfer fees, and confidential transfers. 
-The Light Token Program is built by Light Protocol, an infrastructure protocol on Solana.
-It supports most Token-2022 extensions and optimizes cost for existing or to onboard new users.
-All three programs work similarly for
+Token-2022 (also called "Token Extensions") adds features like transfer hooks,
+transfer fees, and confidential transfers. Both programs work similarly for
 basic transfers, but you must use the correct one when deriving ATAs.
+
+<Callout type="info">
+  [Light Protocol](https://www.zkcompression.com/light-token/payments/overview) 
+  extends Solana's token   programs with APIs that reduce account creation costs.
+  The APIs mirror existing token program interfaces, so the developer 
+  experience stays familiar. See [Fees](#fees) for cost details.
+</Callout>
+
 
 ### Why This Matters
 
@@ -155,7 +159,6 @@ own transfer instruction, and you must invoke the correct one:
 ```typescript
 import { getTransferInstruction } from "@solana-program/token";
 import { getTransferInstruction as getTransferInstruction22 } from "@solana-program/token-2022";
-import { createLightTokenTransferInstruction } from "@lightprotocol/compressed-token";
 
 // For USDC (Token Program)
 const usdcTransferIx = getTransferInstruction({
@@ -172,14 +175,6 @@ const pyusdTransferIx = getTransferInstruction22({
   authority: senderWallet,
   amount: 1_000_000n // 1 PYUSD (6 decimals)
 });
-
-// For USDPT (Light Token)
-const usdptTransferIx = createLightTokenTransferInstruction(
-  senderUsdptAta,
-  receiverUsdptAta,
-  senderWallet,
-  1_000_000n // 1 USDPT (6 decimals)
-);
 
 // *Note*: Most token program JS Client functions include the ability
 // to specify the token program address. Generally, defining it is a
@@ -198,11 +193,6 @@ const usdcTransferIx2 = getTransferInstruction(
 Sending a transfer instruction to the wrong program will fail. The program
 validates that it owns the token accounts involved—accounts created by Token
 Program cannot be transferred via Token-2022, and vice versa. 
-
-<Callout type="info">
-This is not the case with Light Token. There, you can convert existing SPL or Token-2022
-tokens to Light Token and then transfer in one transaction.
-</Callout>
 
 To verify which program a token or token account uses, fetch the mint or token
 account and check its `owner` field:
@@ -241,10 +231,11 @@ const SUPPORTED_TOKENS = {
 
 The Token Extensions Program (Token 2022) provides more features through extra
 instructions referred to as extensions. Extensions are optional features you can
-add to a token mint or token account. The Light Token program supports most Token-2022 extensions.
+add to a token mint or token account. 
+The Light Token API's support most Token-2022 extensions.
 
 For more information on Token Extensions, see the
-[Token Extensions](/docs/tokens/extensions) and [Light Token](https://www.zkcompression.com/light-token/payments/overview#token-extensions) documentation.
+[Token Extensions](/docs/tokens/extensions) documentation.
 
 ## Fees
 
@@ -255,10 +246,13 @@ Solana payments involve up to three cost components:
 | **Base transaction fee**    | 5,000 lamports<sup>\*</sup> | ~$0.0007   | Every transaction (bundle multiple payments to amortize) |
 | **Priority fee**            | Variable                    | Variable   | Optional; faster inclusion during congestion             |
 | **Account creation (rent)** | ~0.0029 SOL                 | ~$0.40     | Only when creating a new token account                   |
-| **Account creation (Light Token)** | ~0.00001 SOL                 | ~$0.001     | When using Light Token                   |
 
 **Total cost per payment**: Under $0.001 for most transfers. If creating a new
-token account, expect ~$0.40 total. With Light Token, the total cost will be around $0.001, regardless of whether a new account is created.
+token account, expect ~$0.40 total. 
+
+**Reducing rent fees with [Light Token API's](https://www.zkcompression.com/light-token/payments/overview)**: 
+The total cost will be around $0.001, regardless of whether a new account is created.
+The API's can create new or wrap existing token accounts from SPL / Token-2022 mints. 
 
 <Callout type="info">
   Solana uses [local fee
@@ -268,7 +262,7 @@ token account, expect ~$0.40 total. With Light Token, the total cost will be aro
   high network activity elsewhere. Rent costs are also [planned to decrease 50%
   in the near
   future](https://github.com/solana-foundation/solana-improvement-documents/pull/436).
-   On mainnet today, the [Light Token program](https://www.zkcompression.com/light-token/payments/overview) reduces rent cost by 99%.
+   On mainnet today, the [Light Token API's](https://www.zkcompression.com/light-token/payments/overview) reduce rent cost by 99%.
 </Callout>
 
 <Callout>
@@ -312,6 +306,9 @@ A typical payment flow:
   </Card>
   <Card title="Send your first payment" href="/docs/payments/send-payments">
     Build and send a stablecoin transfer.
+  </Card>
+  <Card title="Payment flows with Light Token" href="https://www.zkcompression.com/light-token/payments/overview">
+    Learn how Light Token API's extend Solana's existing payment flows.
   </Card>
 </Cards>
 
